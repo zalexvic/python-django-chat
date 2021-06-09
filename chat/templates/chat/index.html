@@ -1,26 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
-</head>
-<body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
+{% extends 'chat/base.html' %}
 
-    <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
+{% block title %}Main title{% endblock %}
 
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
-        };
-    </script>
-</body>
-</html>
+{% block content %}
+    <style type="text/css">
+        .nav-link {
+            color: #ffffff;
+        }
+
+        .nav-link:hover {
+            color: #eb34e8;
+        }
+
+        #description h1 {
+            text-align: center;
+        }
+    </style>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid justify-content-start">
+        <a class="navbar-brand" href="#">WebChat</a>
+        <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Sign In</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Sign Up</a>
+            </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div id="description" class="col-8">
+        <h1 class="mt-2">Welcome to WebChat</h1>
+        <hr class="mt-0 mb-4">
+    </div>
+
+{% endblock %}
