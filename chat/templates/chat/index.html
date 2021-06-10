@@ -2,41 +2,95 @@
 
 {% block title %}Main title{% endblock %}
 
+{% block navigation %}
+        {% if user.is_authenticated %}
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/create-room">Create Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        {% else %}
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sign-up">Sign Up</a>
+                </li>
+            </ul>
+        {% endif %}
+{% endblock %}
+
 {% block content %}
-    <style type="text/css">
-        .nav-link {
-            color: #ffffff;
-        }
 
-        .nav-link:hover {
-            color: #eb34e8;
-        }
+    {% if user.is_authenticated %}
+        <div id="home_menu" class="col-8 justify-content-center">
 
-        #description h1 {
-            text-align: center;
-        }
-    </style>
+            <h1 class="my-4">My Rooms</h1>
+            <hr class="mt-0 mb-4">
 
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container-fluid justify-content-start">
-        <a class="navbar-brand" href="#">WebChat</a>
-        <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Sign In</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Sign Up</a>
-            </li>
-        </ul>
-      </div>
-    </nav>
+            {% for room in user.room_set.all %}
+                <div class="col-sm-4">
+                    <p><a href="/chat/{{room.id}}">{{room.name}}</a></p>
+                </div>
+            {% endfor %}
 
-    <div id="description" class="col-8">
-        <h1 class="mt-2">Welcome to WebChat</h1>
-        <hr class="mt-0 mb-4">
-    </div>
+        </div>
+    {% else %}
+        <style type="text/css">
+            #description {
+                text-align: center;
+            }
+        </style>
+
+        <div id="description" class="col-8 justify-content-center">
+            <h1 class="my-4">Welcome to WebChat</h1>
+            <hr class="mt-0 mb-4">
+
+            <div id="features-list" class="row py-5">
+                <div id="feature-1" class="col-sm-4">
+                    <img src="https://media.istockphoto.com/vectors/sms-speech-bubbles-on-mobile-phone-screen-chat-messages-notification-vector-id943765692" alt="chat-image1"
+                        style="width: 400px; height: 400px;" class="img-fluid img-thumbnail"
+                    />
+                    <h3>Your own chat room</h3>
+                    <p>Create your own chat room and share it with others</p>
+                </div>
+                <div id="feature-2" class="col-sm-4">
+                    <img src="https://media.istockphoto.com/vectors/chat-messages-notification-on-smartphone-vector-illustration-flat-vector-id1026973286?s=612x612" alt="chat-image2"
+                         style="width: 400px; height: 400px;" class="img-fluid img-thumbnail"
+                    />
+                    <h3>Not only text</h3>
+                    <p>Use different ways of sending messages like images and audios</p>
+                </div>
+                <div id="feature-3" class="col-sm-4">
+                    <img src="https://media.istockphoto.com/vectors/mobile-phone-chat-message-notifications-with-man-and-woman-avatar-vector-id1157918880?s=612x612" alt="chat-image3"
+                         style="width: 400px; height: 400px;" class="img-fluid img-thumbnail"
+                    />
+                    <h3>Present yourself</h3>
+                    <p>Upload a profile picture to underline your individuality</p>
+                </div>
+            </div>
+
+
+            <hr class="mt-0 mb-4">
+
+            <div id="join-us" class="py-4">
+                <p>You already have an account? Then login <a href="#">here</a>.</p>
+                <p>Join us <a href="#">here</a>.</p>
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

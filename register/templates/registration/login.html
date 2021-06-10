@@ -1,0 +1,30 @@
+{% extends 'chat/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block navigation %}
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Sign In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/sign-up">Sign Up</a>
+            </li>
+        </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="login" class="col-8 justify-content-center">
+        <form method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <p>Don't have an account? Create one <a href="/sign-up">here</a></p>
+            <button type="submit" class="btn btn-success">Sign In</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'chat/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %} Create Room {% endblock %}
+
+{% block navigation %}
+        {% if user.is_authenticated %}
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#">Create Room</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        {% else %}
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sign-up">Sign Up</a>
+                </li>
+            </ul>
+        {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="create-room" class="col-8 justify-content-center">
+        <form method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Create</button>
+        </form>
+    </div>
+{% endblock %}

@@ -20,7 +20,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from register import views as reg_views
+from chat import views as chat_views
+
 urlpatterns = [
-    path('', include('chat.urls')),
+    path('', chat_views.index, name='index'),
+    path('chat/', include('chat.urls')),
+    path('sign-up/', reg_views.sign_up, name='sign_up'),
     path('admin/', admin.site.urls),
+    path('', include('django.contrib.auth.urls')),
+    path('create-room/', chat_views.create_room, name='create-room')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
