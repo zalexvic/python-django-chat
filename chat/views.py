@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Room
-from .forms import CreateRoomForm
+from .forms import CreateRoomForm, EditProfileForm
 
 
 # Create your views here.
@@ -12,6 +12,7 @@ def room(request, room_id):
     return render(request, 'chat/room.html', {
         "room_id": room_id,
     })
+
 
 def create_room(request):
     if request.method == "POST":
@@ -29,3 +30,22 @@ def create_room(request):
     else:
         form = CreateRoomForm()
     return render(request, 'chat/create-room.html', {'form': form})
+
+
+def profile(request):
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = request.user.profile
+
+            if form.cleaned_data['profile_pic']:
+                profile.profile_pic = form.cleaned_data['profile_pic']
+                profile.save()
+
+            if form.cleaned_data['handle']:
+                profile.handle = form.cleaned_data['handle']
+                profile.save()
+    else:
+        form = EditProfileForm()
+    return render(request, 'chat/profile.html', {'form': form})
+

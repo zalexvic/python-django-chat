@@ -1,4 +1,5 @@
 from django import forms
+from .models import Profile
 
 
 class CreateRoomForm(forms.Form):
@@ -8,3 +9,12 @@ class CreateRoomForm(forms.Form):
     class Meta:
         model = forms.ModelForm
         fields = ['room_name', 'room_password']
+
+
+class EditProfileForm(forms.Form):
+    handle = forms.CharField(max_length=30, required=False)
+    profile_pic = forms.ImageField(required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['handle', 'profile_pic']

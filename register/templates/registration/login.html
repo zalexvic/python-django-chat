@@ -5,20 +5,23 @@
 {% block title %} Login Page {% endblock %}
 
 {% block navigation %}
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/login">Sign In</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/sign-up">Sign Up</a>
-            </li>
-        </ul>
+        {% if not user.is_authenticated %}
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sign-up">Sign Up</a>
+                </li>
+            </ul>
+        {% endif %}
 {% endblock %}
 
 {% block content %}
+    {% if not user.is_authenticated %}
     <div id="login" class="col-8 justify-content-center">
         <form method="POST" class="form-group">
             {% csrf_token %}
@@ -27,4 +30,5 @@
             <button type="submit" class="btn btn-success">Sign In</button>
         </form>
     </div>
+    {% endif %}
 {% endblock %}
