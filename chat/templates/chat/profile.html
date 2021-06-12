@@ -4,37 +4,6 @@
 
 {% block title %} Profile {% endblock %}
 
-{% block navigation %}
-        {% if user.is_authenticated %}
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/create-room">Create Room</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
-        {% else %}
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Sign In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/sign-up">Sign Up</a>
-                </li>
-            </ul>
-        {% endif %}
-{% endblock %}
-
 {% block content %}
     {% if user.is_authenticated %}
         <div id="profile" class="col-8 justify-content-center py-5">

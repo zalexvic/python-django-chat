@@ -1,0 +1,52 @@
+{% extends 'chat/base.html' %}
+
+{% block title %}Main title{% endblock %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+        <style type="text/css">
+            .link-dark:hover {
+                color: #eb34e8;
+            }
+        </style>
+
+        <div id="home_menu" class="col-8 justify-content-center">
+
+            <h1 class="my-4">My Rooms</h1>
+            <hr class="mt-0 mb-4">
+
+
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    {% for room in page %}
+                        <li class="list-group-item">
+                            <a class="link-dark text-decoration-none" href="/chat/{{ room.id }}">{{ room.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {% if page.has_previous %}
+                <a class="btn btn-outline-info mb-4 mt-2" href="?page=1">First</a>
+                <a class="btn btn-outline-info mb-4 mt-2" href="?page={{ page.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for page_num in page.paginator.page_range %}
+                {% if page.number == num %}
+                    <a class="btn btn-info mb-4 mt-2" href="?page={{ page_num }}">{{ page_num }}</a>
+                {% elif page_num > page.number|add:'-2' and page_num < page.number|add:'2' %}
+                    <a class="btn btn-outline-info mb-4 mt-2" href="?page={{ page_num }}">{{ page_num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page.has_next %}
+                <a class="btn btn-outline-info mb-4 mt-2" href="?page={{ page.next_page_number }}">Next</a>
+                <a class="btn btn-outline-info mb-4 mt-2" href="?page={{ page.paginator.num_pages }}">Last</a>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -29,6 +29,7 @@ urlpatterns = [
     path('sign-up/', reg_views.sign_up, name='sign_up'),
     path('admin/', admin.site.urls),
     path('', include('django.contrib.auth.urls')),
-    path('create-room/', chat_views.create_room, name='create-room'),
+    path('create-room/', chat_views.create_room, name='create_room'),
     path('profile/', chat_views.profile, name='profile'),
+    path('all-rooms/', chat_views.all_rooms, name='all_rooms')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,8 +19,40 @@
             <nav class="navbar navbar-dark bg-dark">
               <div class="container-fluid justify-content-start">
                 <a class="navbar-brand" href="/">WebChat</a>
-                {% block navigation %}
-                {% endblock %}
+                    {% if user.is_authenticated %}
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/create-room">Create Room</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/chat/join-room">Join Room</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/all-rooms">All Rooms</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/profile">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/sign-up">Sign Up</a>
+                            </li>
+                        </ul>
+                    {% endif %}
               </div>
             </nav>
                 {% block content %}

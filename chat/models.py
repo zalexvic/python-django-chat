@@ -10,14 +10,18 @@ class Profile(models.Model):
 
 class Room(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=50, null=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    users = models.ManyToManyField(User, related_name='users')
+    creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='my_rooms')
+    users = models.ManyToManyField(User, related_name='all_rooms')
 
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room_id = models.IntegerField(null=True)
+    content = models.TextField(null=True)
     message_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-message_date']
