@@ -7,7 +7,6 @@ from chat.models import Profile
 def sign_up(request):
     if request.method == "POST":
         form = RegisterForm(request.POST, request.FILES)
-        print(form.errors)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()

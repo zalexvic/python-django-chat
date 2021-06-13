@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from .models import Room, Message
@@ -9,6 +11,8 @@ from .forms import (
     EditRoomForm
 )
 
+from django.core import serializers
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -58,7 +62,7 @@ def room(request, room_id):
     handle = user.profile.handle
     profile_pic = user.profile.profile_pic.url
 
-    messages = Message.objects.filter(room_id=room_id)[0:25:-1]
+    messages = Message.objects.filter(room_id=room_id)[0:10:-1]
 
     return render(request, 'chat/room.html', {
         "room_id": room_id,
@@ -161,3 +165,26 @@ def profile(request):
         form = EditProfileForm()
     return render(request, 'chat/profile.html', {'form': form})
 
+
+def load_more(request, room_id):
+    offset = int(request.POST.get('offset'))
+    limit = 10
+
+    messages_model = Message.objects.filter(room_id=room_id)
+    messages = messages_model[offset:offset+limit:-1]
+    total_data = messages_model.count()
+
+    messages_json_str = serializers.serialize('json', messages)
+    messages_json = json.loads(messages_json_str)
+
+    for ind, message in enumerate(messages):
+        messages_json[ind]['fields']['profile_pic'] = message.author.profile.profile_pic.url
+        messages_json[ind]['fields']['handle'] = message.author.profile.handle
+
+    messages_json_str = json.dumps(messages_json)
+
+    data = {
+        'messages': messages_json_str,
+        'totalData': total_data
+    }
+    return JsonResponse(data=data)

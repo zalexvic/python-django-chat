@@ -3,12 +3,8 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <meta charset="utf-8"/>
-    <title>Room #{{ room_name }}</title>
+    <title>{{ room_name }}</title>
     <style type="text/css">
-        body {
-        overflow-x:hidden;
-        }
-
         .nav-link {
             color: #ffffff;
         }
@@ -18,7 +14,8 @@
         }
 
         #chat-log {
-            height: 50vh;
+            //height: 50vh;
+            max-height: 300px;
             overflow-y: scroll;
             word-break: break-word;
         }
@@ -77,15 +74,15 @@
 
         <div class="row mt-2">
             <div class="col-lg-4"></div>
-            <div id="chat-log" class="col-lg-4 border border-primary rounded min-vh-25">
+            <div id="chat-log" class="col-lg-4 border border-primary rounded min-vh-25 infinite-container">
                 {% for message in messages %}
                     {% if user.id == message.author.id %}
-                        <div class="col-lg-offset-6 mt-2" style="text-align: right">
+                        <div class="chat-message col-lg-offset-6 mt-2" style="text-align: right">
                             <img src="{{ message.author.profile.profile_pic.url }}" alt="" class="mx-2 rounded-circle" width="50" height="50" />
                             <b>{{ message.author.profile.handle }}</b>: {{ message.content }}<br>
                         </div>
                     {% else %}
-                        <div class="mt-2">
+                        <div class="chat-message mt-2">
                             <img src="{{ message.author.profile.profile_pic.url }}" alt="" class="mx-2 rounded-circle" width="50" height="50" />
                             <b>{{ message.author.profile.handle }}</b>: {{ message.content }}<br>
                         </div>
@@ -95,6 +92,15 @@
             <div class="col-lg-4"></div>
         </div>
         <br>
+
+        <div class="row">
+            <div class="col-12">
+                {% if page.has_next %}
+                    <a class="infinite-more-link" href="?page={{ page.next_page_number }}"></a>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4">
@@ -110,6 +116,13 @@
         {{ user_id|json_script:"user-id" }}
         {{ profile_pic|json_script:"profile-pic" }}
         <script>
+            function scrollToBottom() {
+                let chatLogDiv = document.getElementById("chat-log");
+                chatLogDiv.scrollTop = chatLogDiv.scrollHeight;
+            }
+
+            scrollToBottom();
+
             const roomId = JSON.parse(document.getElementById('room-id').textContent);
             const handle = JSON.parse(document.getElementById('handle').textContent);
             const userId = JSON.parse(document.getElementById('user-id').textContent);
@@ -127,18 +140,19 @@
                 const data = JSON.parse(e.data);
                 let message_html = '';
                 if (data.user_id === {{ user.id }}) {
-                    message_html = '<div class="col-lg-offset-6" style="text-align: right">' +
+                    message_html = '<div class="chat-message col-lg-offset-6 mt-2" style="text-align: right">' +
                                         '<img src="' + data.profile_pic + '" class="mx-2 rounded-circle" width="50" height="50" />' +
                                         '<b>' + data.handle + '</b>' + ': ' + data.message + '<br>' +
                                    '</div>';
                 }
                 else {
-                    message_html = '<div>' +
+                    message_html = '<div class="chat-message mt-2">' +
                                         '<img src="' + data.profile_pic + '" class="mx-2 rounded-circle" width="50" height="50" />' +
                                         '<b>' + data.handle + '</b>' + ': ' + data.message + '<br>' +
                                     '</div>';
                 }
                 document.querySelector('#chat-log').innerHTML += message_html;
+                scrollToBottom();
             };
 
             chatSocket.onclose = function(e) {
@@ -165,7 +179,46 @@
             };
         </script>
     {% endif %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+    <script>
+       $('#chat-log').scroll(function(){
+            if( $(this).scrollTop()==0 ){
+                $.ajax({
+                    url: "/chat/load-more/{{ room_id }}",
+                    type: 'post',
+                    data: {
+                        'offset': $('.chat-message').length,
+                        'csrfmiddlewaretoken': "{{ csrf_token }}"
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        let html = "";
+                        let json_data = $.parseJSON(res.messages);
+                        if ( $('.chat-message').length < res.totalData ) {
+                            $.each(json_data, function(index, data) {
+                                if (data.fields.author === {{ user.id }}) {
+                                    html += '<div class="chat-message col-lg-offset-6 mt-2" style="text-align: right">' +
+                                                '<img src="' + data.fields.profile_pic + '" class="mx-2 rounded-circle" width="50" height="50" />' +
+                                                '<b>' + data.fields.handle + '</b>' + ': ' + data.fields.content + '<br>' +
+                                            '</div>';
+                                }
+                                else {
+                                    html += '<div class="chat-message mt-2">' +
+                                                '<img src="' + data.fields.profile_pic + '" class="mx-2 rounded-circle" width="50" height="50" />' +
+                                                '<b>' + data.fields.handle + '</b>' + ': ' + data.fields.content + '<br>' +
+                                             '</div>';
+                                }
+                            });
+                            $("#chat-log").prepend(html);
+                            $("#chat-log").scrollTop(5);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
