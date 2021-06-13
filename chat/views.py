@@ -21,7 +21,7 @@ def index(request):
 
     if user.is_authenticated:
         user_rooms = user.all_rooms.all()
-        rooms_per_page = 15
+        rooms_per_page = 7
 
         paginator = Paginator(user_rooms, rooms_per_page)
 
@@ -126,6 +126,10 @@ def join_room(request):
     if request.method == "POST":
         form = JoinRoomForm(request.POST)
         if form.is_valid():
+            user = request.user
+            room_users = Room.objects.get(id=form.cleaned_data['room_id']).users
+            if user in room_users.all():
+                return redirect('/chat/' + str(form.cleaned_data['room_id']))
             return redirect('/chat/enter-room/' + str(form.cleaned_data['room_id']))
     else:
         form = JoinRoomForm()
