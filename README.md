@@ -7,9 +7,9 @@ A small web chat application developed created with Django Channels.
 ## Features
 
 - **Profile System.** Make yourself more recognizable and create a profile with your own handle and profile pic.
-- **Private Rooms.** Only people you trust can join your room because every chat room secure by password.
-- **All Rooms Available.** You can find any room you like in the list of rooms. Also your can join room by it's ID.
-- **Room Management.** Room's creator can change it's name and password, users that are not creators are able to leave room.
+- **Private Rooms.** Only people you trust can join your room because every chat room secured by password.
+- **All Rooms Available.** You can find any room you like in the list of rooms. Also, your can join room by its ID.
+- **Room Management.** Room's creator can change room's name and password, users that are not creators are able to leave room.
 
 ## Installation
 
