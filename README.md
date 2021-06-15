@@ -15,7 +15,7 @@ A small web chat application created with Django Channels.
 
 ### 1. Install using Docker
 
-1. Create a working directory and put files from repository in it.
+1. Create a working directory called ```chatapp``` and put files from repository in it.
    
 ![alt text](https://github.com/zalexvic/python-django-chat/blob/main/readme_images/docker_1_1.jpg "Docker Install 1.1")
 ![alt text](https://github.com/zalexvic/python-django-chat/blob/main/readme_images/docker_1_2.jpg "Docker Install 1.2")
