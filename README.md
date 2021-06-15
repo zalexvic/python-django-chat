@@ -1,6 +1,6 @@
 # WebChat
 
-A small web chat application developed created with Django Channels.
+A small web chat application created with Django Channels.
 
 ![alt text](https://github.com/zalexvic/python-django-chat/blob/main/readme_images/chat-room.png "Chat Room Image")
 
