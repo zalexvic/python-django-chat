@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=chat_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+    volumes:
+      - ./storage/postgres-data:/var/lib/postgresql/data
+    networks:
+      - djangonetwork
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./storage/redis/data:/data
+    networks:
+      - djangonetwork
+  chat:
+    build: ./chatapp
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=chat_db
+      - DB_USER=postgres
+      - DB_PASSWORD=123
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_IP=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - db
+      - redis
+    links:
+      - db:db
+    networks:
+      - djangonetwork
+
+networks:
+  djangonetwork:
+    driver: bridge
