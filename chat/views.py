@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from .models import Room, Message
 from .forms import (
     CreateRoomForm,
@@ -50,6 +51,7 @@ def index(request):
     return render(request, 'chat/index.html', context)
 
 
+@login_required
 def room(request, room_id):
     room = Room.objects.get(id=room_id)
     room_name = room.name
@@ -75,6 +77,7 @@ def room(request, room_id):
     })
 
 
+@login_required
 def create_room(request):
     if request.method == "POST":
         form = CreateRoomForm(request.POST)
@@ -93,6 +96,7 @@ def create_room(request):
     return render(request, 'chat/create-room.html', {'form': form})
 
 
+@login_required
 def edit_room(request, room_id):
     if request.method == "POST":
         form = EditRoomForm(request.POST)
@@ -110,6 +114,7 @@ def edit_room(request, room_id):
     return render(request, 'chat/edit-room.html', {'form':form})
 
 
+@login_required
 def enter_room(request, room_id):
     if request.method == "POST":
         form = EnterRoomForm(request.POST)
@@ -123,6 +128,7 @@ def enter_room(request, room_id):
     return render(request, 'chat/enter-room.html', {'form': form})
 
 
+@login_required
 def join_room(request):
     if request.method == "POST":
         form = JoinRoomForm(request.POST)
@@ -137,6 +143,7 @@ def join_room(request):
     return render(request, 'chat/join-room.html', {'form': form})
 
 
+@login_required
 def all_rooms(request):
     user = request.user
     context = {}
@@ -153,6 +160,7 @@ def all_rooms(request):
     return render(request, 'chat/all-rooms.html', context)
 
 
+@login_required
 def profile(request):
     if request.method == "POST":
         form = EditProfileForm(request.POST, request.FILES)
@@ -171,6 +179,7 @@ def profile(request):
     return render(request, 'chat/profile.html', {'form': form})
 
 
+@login_required
 def load_more(request, room_id):
     offset = int(request.POST.get('offset'))
     limit = 10
