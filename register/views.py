@@ -19,7 +19,7 @@ def sign_up(request):
                 profile.profile_pic = form.cleaned_data['profile_pic']
 
             profile.save()
-        return redirect('/')
+            return redirect('/')
     else:
         form = RegisterForm()
     return render(request, 'register/signup.html', {'form': form})
